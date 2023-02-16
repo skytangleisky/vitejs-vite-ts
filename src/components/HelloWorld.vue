@@ -62,12 +62,12 @@ console.log(year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second)
 */
 let timeString:String=ref("0000-00-00 00:00:00")
 let timeStringEarth:String=ref("0000-00-00 00:00:00")
-let inputTimeString:[String,undefied]=ref("2819-17-22 10:57:34")
+let timeStringUTC:String=ref("0000-00-00 00:00:00")
+let inputTimeString:[String,undefied]=ref("2804-18-31 02:02:88")
 let timer:Integer=0
 let seconds:[Number,undefied] 
 onMounted(()=>{
-  // seconds = Math.floor(Date.now()*2/1000) - (2+87*90+90*90*33 + 7*90*90*36) + 2805*eval(daysPerMonthArr.join('+'))*36*90*90
-  let time = {
+    let time = {
     year:2804,
     month:18,
     day:31,
@@ -75,12 +75,15 @@ onMounted(()=>{
     minute:2,
     second:88
   }
+  // seconds = /*Math.floor(Date.now()*2/1000)*/ - (2+87*90+90*90*33 + 7*90*90*36) + 2805*eval(daysPerMonthArr.join('+'))*36*90*90
   seconds = time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+(time.day-1)*36*90*90+time.hour*90*90+time.minute*90+time.second + Math.floor(Date.now()*2/1000)
   proc(seconds)
   timer = setInterval(()=>{
     proc(++seconds)
     let timeEarth = new Date((seconds-(time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+(time.day-1)*36*90*90+time.hour*90*90+time.minute*90+time.second))/2*1000)
-    timeStringEarth.value = `${timeEarth.getFullYear().toString().padStart(4,'0')}-${(timeEarth.getMonth()+1).toString().padStart(2,'0')}-${timeEarth.getDate().toString().padStart(2,'0')} ${timeEarth.getHours().toString().padStart(2,'0')}:${timeEarth.getMinutes().toString().padStart(2,'0')}:${timeEarth.getSeconds().toString().padStart(2,'0')}`
+    timeStringUTC.value = `${timeEarth.getFullYear().toString().padStart(4,'0')}-${(timeEarth.getMonth()+1).toString().padStart(2,'0')}-${timeEarth.getDate().toString().padStart(2,'0')} ${timeEarth.getHours().toString().padStart(2,'0')}:${timeEarth.getMinutes().toString().padStart(2,'0')}:${timeEarth.getSeconds().toString().padStart(2,'0')}`
+    timeStringEarth.value = timeEarth.toISOString().substr(0,10)+' '+timeEarth.toISOString().substr(11,8)
+    
   },500)
 })
 function proc(seconds){
@@ -92,7 +95,7 @@ function proc(seconds){
     }
     return sum<=Math.floor((seconds%(eval(daysPerMonthArr.join('+'))*36*90*90))/(36*90*90))
   }).length
-  let d:Number = M>1?Math.floor((seconds%(eval(daysPerMonthArr.join('+'))*36*90*90))/(36*90*90)) - eval(daysPerMonthArr.filter((v,k,arr)=>k<M-1).join('+')):Math.floor((seconds%(eval(daysPerMonthArr.join('+'))*36*90*90))/(36*90*90))+1
+  let d:Number = (M>1?Math.floor((seconds%(eval(daysPerMonthArr.join('+'))*36*90*90))/(36*90*90)) - eval(daysPerMonthArr.filter((v,k,arr)=>k<M-1).join('+')):Math.floor((seconds%(eval(daysPerMonthArr.join('+'))*36*90*90))/(36*90*90)))+1
 
   let h:Number = Math.floor((seconds%(36*90*90))/(90*90))
   let m:Number = Math.floor((seconds%(90*90))/90)
@@ -149,6 +152,7 @@ let confirm = (val) => {
     <el-input v-model="inputTimeString" :placeholder="timeString"></el-input>
     <el-button @click="confirm(inputTimeString)">确定</el-button>
     <div class="time" v-text="timeStringEarth"></div>
+    <div class="time" v-text="timeStringUTC"></div>
   </div>
   <!-- <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
