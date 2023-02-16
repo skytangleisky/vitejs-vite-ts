@@ -75,11 +75,11 @@ onMounted(()=>{
     minute:2,
     second:88
   }
-  seconds = time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+time.day*36*90*90+time.hour*90*90+time.minute*90+time.second + Math.floor(Date.now()*2/1000)
+  seconds = time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+(time.day-1)*36*90*90+time.hour*90*90+time.minute*90+time.second + Math.floor(Date.now()*2/1000)
   proc(seconds)
   timer = setInterval(()=>{
     proc(++seconds)
-    let timeEarth = new Date((seconds-(time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+time.day*36*90*90+time.hour*90*90+time.minute*90+time.second))/2*1000)
+    let timeEarth = new Date((seconds-(time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+(time.day-1)*36*90*90+time.hour*90*90+time.minute*90+time.second))/2*1000)
     timeStringEarth.value = `${timeEarth.getFullYear().toString().padStart(4,'0')}-${(timeEarth.getMonth()+1).toString().padStart(2,'0')}-${timeEarth.getDate().toString().padStart(2,'0')} ${timeEarth.getHours().toString().padStart(2,'0')}:${timeEarth.getMinutes().toString().padStart(2,'0')}:${timeEarth.getSeconds().toString().padStart(2,'0')}`
   },500)
 })
@@ -130,7 +130,7 @@ onUnmounted(()=>{
 let confirm = (val) => {
   let time = parseTime(val)
   if(time){
-    seconds = time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+time.day*36*90*90+time.hour*90*90+time.minute*90+time.second
+    seconds = time.year*eval(daysPerMonthArr.join('+'))*36*90*90+(time.month>1?eval(daysPerMonthArr.filter((v,k,arr)=>k<time.month-1).join('+'))*36*90*90:0)+(time.day-1)*36*90*90+time.hour*90*90+time.minute*90+time.second
     proc(seconds)
   }else{
     ElMessage({
